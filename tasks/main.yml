@@ -1,0 +1,57 @@
+---
+
+# Upgrade
+
+- name: upgrade_system
+  apt:
+    update_cache: yes
+    upgrade: dist
+  register: upgrade_system
+
+# Packages
+
+- name: install_packages
+  when: upgrade_system|success
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - "sendmail"
+    - "ufw"
+    - "fail2ban"
+  register: install_packages
+
+# UFW
+
+- name: ufw_allow
+  when: install_packages|success
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    direction: "{{ item.direction }}"
+  with_items:
+    - { port: '22', proto: 'tcp', direction: 'in'}
+    - { port: '22', proto: 'tcp', direction: 'out'}
+    - { port: '53', proto: 'any', direction: 'out' }
+    - { port: '80', proto: 'tcp', direction: 'in' }
+    - { port: '80', proto: 'tcp', direction: 'out' }
+    - { port: '443', proto: 'tcp', direction: 'in' }
+    - { port: '443', proto: 'tcp', direction: 'out' }
+  register: ufw_allow
+
+- name: ufw_deny
+  when: install_packages|success and ufw_allow|success
+  ufw:
+    policy: deny
+    direction: "{{ item }}"
+  with_items:
+    - "incoming"
+    - "outgoing"
+    - "routed"
+  register: ufw_deny
+
+- name: ufw_enable
+  when: install_packages|success and ufw_allow|success and ufw_deny|success
+  ufw:
+    logging: "on"
+    state:   enabled
