@@ -55,3 +55,16 @@
   ufw:
     logging: "on"
     state:   enabled
+
+# Fail2Ban
+
+- name: amend_fail2ban_config
+  when: install_packages|success
+  template:
+    src:    jail.local.j2
+    dest:   /etc/fail2ban/jail.local
+    owner:  root
+    group:  root
+    mode:   "u=rw,g=r,o=r"
+  notify:
+    - restart_fail2ban
