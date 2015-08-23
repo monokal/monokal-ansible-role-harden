@@ -88,7 +88,7 @@ action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(proto
 # Choose default action.  To change, just override value of 'action' with the
 # interpolation to the chosen action shortcut (e.g.  action_mw, action_mwl, etc) in jail.local
 # globally (section [DEFAULT]) or per specific section
-action = action_mwl
+action = %(action_mwl)s
 
 #
 # JAILS
@@ -462,7 +462,7 @@ logpath  = /var/log/asterisk/messages
 #   an infinite loop constantly feeding itself with non-informative lines
 [recidive]
 
-enabled  = false
+enabled  = true
 filter   = recidive
 logpath  = /var/log/fail2ban.log
 action   = iptables-allports[name=recidive]
