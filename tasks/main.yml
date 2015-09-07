@@ -33,6 +33,7 @@
     # Inbound
     - { port: '22',  proto: 'tcp', direction: 'in'}     # ssh
     # Outbound
+    - { port: '22',  proto: 'tcp', direction: 'out' }   # ssh
     - { port: '25',  proto: 'tcp', direction: 'out' }   # smtp
     - { port: '587', proto: 'tcp', direction: 'out' }   # smtp
     - { port: '67',  proto: 'udp', direction: 'out' }   # dhcp
