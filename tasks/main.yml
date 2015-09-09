@@ -47,7 +47,7 @@
 - name: ufw_deny
   when: install_packages|success and ufw_allow|success
   ufw:
-    policy: deny
+    policy:    deny
     direction: "{{ item }}"
   with_items:
     - "incoming"
